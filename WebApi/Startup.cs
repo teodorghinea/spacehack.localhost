@@ -27,18 +27,14 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<EfDbContext>(options => options
-                    .UseSqlServer(Configuration.GetConnectionString("Semnal")));
+                    .UseSqlServer(Configuration.GetConnectionString("localhostTeam")));
 
             AddDependencies(services);
             services.AddControllers();
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll",
-                    builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-            });
+            services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "localhost.SpaceHack", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "localhost", Version = "v1" });
             });
         }
 
@@ -68,15 +64,25 @@ namespace WebApi
                 });
             });
 
-            if (env.IsDevelopment())
+
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwagger(c =>
             {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Semnal"));
-            }
+                c.RouteTemplate = "api/swagger/{documentName}/swagger.json";
+            });
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/api/swagger/v1/swagger.json", "localhost.SpaceHack");
+                c.RoutePrefix = "api/swagger";
+            });
+
 
             app.UseCors("AllowAll");
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

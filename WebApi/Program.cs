@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using System;
 
 namespace WebApi
 {
@@ -7,6 +8,9 @@ namespace WebApi
     {
         public static void Main(string[] args)
         {
+
+            Console.WriteLine("App starting...");
+
             CreateHostBuilder(args).Build().Run();
         }
 

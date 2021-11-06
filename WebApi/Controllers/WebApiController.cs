@@ -13,7 +13,6 @@ namespace WebApi.Controllers
         public WebApiController(IHostEnvironment environment)
         {
             Environment = environment;
-
         }
 
         public override Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
@@ -28,6 +27,7 @@ namespace WebApi.Controllers
             base.OnActionExecuting(context);
         }
 
+        [NonAction]
         private void CheckModel(ActionExecutingContext context)
         {
             if (!ModelState.IsValid)
