@@ -4,6 +4,7 @@ using DataLayer.Repositories;
 using Services.Dtos;
 using Services.Helpers;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Services.Services.Facebook
@@ -17,7 +18,6 @@ namespace Services.Services.Facebook
 
     public class FacebookService : IFacebookService
     {
-
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
@@ -30,6 +30,7 @@ namespace Services.Services.Facebook
         public async Task<List<FacebookPostDto>> GetPostsAsync(int skip = 0, int take = 0)
         {
             var facebookPosts = await _unitOfWork.FacebookPosts.GetAllSpecifyListSizeAsync(skip, take);
+            facebookPosts = facebookPosts.OrderBy(p => p.Date).ToList();
             return _mapper.Map<List<FacebookPostDto>>(facebookPosts);
         }
 

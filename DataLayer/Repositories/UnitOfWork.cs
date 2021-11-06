@@ -9,6 +9,7 @@ namespace DataLayer.Repositories
     {
         Task<bool> SaveChangesAsync();
         IFacebookPostRepository FacebookPosts { get; }
+        ICompetitorRepository Competitors { get; }
     }
 
     public class UnitOfWork : IUnitOfWork
@@ -16,11 +17,15 @@ namespace DataLayer.Repositories
         private readonly EfDbContext _efDbContext;
 
         public IFacebookPostRepository FacebookPosts { get; }
+        public ICompetitorRepository Competitors { get; }
 
-        public UnitOfWork(EfDbContext efDbContext, IFacebookPostRepository facebookPosts)
+        public UnitOfWork(EfDbContext efDbContext, 
+            IFacebookPostRepository facebookPosts, 
+            ICompetitorRepository competitors)
         {
             _efDbContext = efDbContext;
             FacebookPosts = facebookPosts;
+            Competitors = competitors;
         }
 
         public async Task<bool> SaveChangesAsync()

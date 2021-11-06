@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Services.AutomapperProfiles;
+using Services.Services;
 using Services.Services.DatabaseParser;
 using Services.Services.Facebook;
 
@@ -105,19 +106,21 @@ namespace WebApi
         {
             services.AddScoped<IDatabaseSeederService, DatabaseSeederService>();
             services.AddScoped<IFacebookService, FacebookService>();
+            services.AddScoped<ICompetitorService, CompetitorService>();
         }
 
         private void AddRepositories(IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IFacebookPostRepository, FacebookPostRepository>();
+            services.AddScoped<ICompetitorRepository, CompetitorRepository>();
         }
 
         private static void AddAutoMapper(IServiceCollection services)
         {
             var mapperConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new FacebookProfiles());
+                mc.AddProfile(new MapperProfiles());
             });
 
             var mapper = mapperConfig.CreateMapper();

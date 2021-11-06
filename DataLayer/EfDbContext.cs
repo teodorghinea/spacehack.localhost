@@ -11,6 +11,7 @@ namespace DataLayer
             = LoggerFactory.Create(builder => { builder.AddConsole(); });
 
         public DbSet<FacebookPost> FacebookPosts { get; set; }
+        public DbSet<Competitor> Competitors { get; set; }
 
         public EfDbContext(DbContextOptions<EfDbContext> options) : base(options) { }
 

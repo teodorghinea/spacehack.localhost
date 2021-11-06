@@ -1,4 +1,5 @@
 ﻿using DataLayer.Entities.Enums;
+using System;
 
 namespace Services.Dtos
 {
@@ -13,5 +14,6 @@ namespace Services.Dtos
         public int Reactions { get; set; }
         public string Url { get; set; }
         public string Date { get; set; }
+        public Guid CompetitorId { get; set; }
     }
 }

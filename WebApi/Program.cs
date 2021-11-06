@@ -8,9 +8,6 @@ namespace WebApi
     {
         public static void Main(string[] args)
         {
-
-            Console.WriteLine("App starting...");
-
             CreateHostBuilder(args).Build().Run();
         }
 

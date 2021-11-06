@@ -18,7 +18,6 @@ namespace WebApi.Controllers
             _facebookService = facebookService;
         }
 
-
         [HttpGet("posts")]
         public async Task<ActionResult<List<FacebookPostDto>>> GetPosts([FromQuery] int skip = 0, int take = 0)
         {

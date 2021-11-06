@@ -14,5 +14,6 @@ namespace Services.Dtos
         public int Likes { get; set; }
         public int Shares { get; set; }
         public int Reactions { get; set; }
+        public Guid? CompetitorId { get; set; }
     }
 }

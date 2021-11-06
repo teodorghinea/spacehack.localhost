@@ -4,11 +4,16 @@ using Services.Dtos;
 
 namespace Services.AutomapperProfiles
 {
-    public class FacebookProfiles : Profile
+    public class MapperProfiles : Profile
     {
 
-        public FacebookProfiles()
+        public MapperProfiles()
         {
+            /* competitor objects */
+            CreateMap<Competitor, CompetitorDto>()
+                .ReverseMap();
+
+            /* facebook objects */
             CreateMap<FacebookPost, FacebookPostDto>()
                 .ForMember(dest => dest.MediaFile, opt => opt.MapFrom(src => src.MediaFile.Trim()))
                 .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.Url.Trim()))
