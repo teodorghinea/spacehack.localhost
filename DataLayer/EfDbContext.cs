@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataLayer.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Linq;
 
@@ -8,6 +9,8 @@ namespace DataLayer
     {
         public static readonly ILoggerFactory MyLoggerFactory
             = LoggerFactory.Create(builder => { builder.AddConsole(); });
+
+        public DbSet<FacebookPost> FacebookPosts { get; set; }
 
         public EfDbContext(DbContextOptions<EfDbContext> options) : base(options) { }
 

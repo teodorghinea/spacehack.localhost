@@ -6,23 +6,24 @@ using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
+
     [ApiController]
-    [Route("api")]
-    public class MiscController : WebApiController
+    [Route("api/database-seeder")]
+    public class DatasetController : WebApiController
     {
         private readonly IDatabaseSeederService _seeder;
 
-        public MiscController(IHostEnvironment environment, IDatabaseSeederService seeder) : base(environment) 
+        public DatasetController(IHostEnvironment environment, IDatabaseSeederService seeder) : base(environment)
         {
             _seeder = seeder;
         }
 
         [HttpGet]
-        [Route("hello-world")]
+        [Route("seed/facebook")]
         public async Task<ActionResult<string>> HelloWorld()
         {
-            await _seeder.GetContentAsync(typeof(FacebookPost), "HOOTSUITE_FACEBOOKPAGE.csv");
-            return Ok("Hello World!");
+            await _seeder.GetContentAsync(typeof(FacebookPost), "HOOTSUITE_FACEBOOKPAGE.tsv");
+            return Ok();
         }
 
     }

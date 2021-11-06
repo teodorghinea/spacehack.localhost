@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataLayer.Entities;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 
 namespace DataLayer.Repositories
@@ -6,17 +8,19 @@ namespace DataLayer.Repositories
     public interface IUnitOfWork
     {
         Task<bool> SaveChangesAsync();
+        IFacebookPostRepository FacebookPosts { get; }
     }
 
     public class UnitOfWork : IUnitOfWork
     {
         private readonly EfDbContext _efDbContext;
-      
 
-        public UnitOfWork(EfDbContext efDbContext)
+        public IFacebookPostRepository FacebookPosts { get; }
+
+        public UnitOfWork(EfDbContext efDbContext, IFacebookPostRepository facebookPosts)
         {
             _efDbContext = efDbContext;
-          
+            FacebookPosts = facebookPosts;
         }
 
         public async Task<bool> SaveChangesAsync()

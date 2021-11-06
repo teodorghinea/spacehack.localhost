@@ -17,6 +17,7 @@ namespace DataLayer.Repositories
         void UpdateRange(IList<T> records);
         void Delete(T record);
         void DeleteRange(IList<T> records);
+        IQueryable<T> GetRecords(bool asNoTracking = false, bool includeDeleted = false);
     }
 
     public class RepositoryBase<T> : IDisposable, IRepositoryBase<T> where T : BaseEntity, new()
@@ -96,7 +97,7 @@ namespace DataLayer.Repositories
             _context.Dispose();
         }
 
-        protected IQueryable<T> GetRecords(bool asNoTracking = false, bool includeDeleted = false)
+        public IQueryable<T> GetRecords(bool asNoTracking = false, bool includeDeleted = false)
         {
             var query = includeDeleted
                 ? _dbSet.Where(entity => entity.DeletedAt != null)

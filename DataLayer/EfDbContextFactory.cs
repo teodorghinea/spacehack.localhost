@@ -15,7 +15,7 @@ namespace DataLayer
                 .Build();
 
             DbContextOptionsBuilder<EfDbContext> optionsBuilder = new DbContextOptionsBuilder<EfDbContext>();
-            optionsBuilder.UseSqlServer(configuration.GetConnectionString("Semnal"));
+            optionsBuilder.UseSqlServer(configuration.GetConnectionString("localhostTeam"));
             return new EfDbContext(optionsBuilder.Options);
         }
     }

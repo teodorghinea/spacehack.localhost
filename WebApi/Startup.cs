@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
+using AutoMapper;
 using DataLayer;
 using DataLayer.Repositories;
 using Microsoft.AspNetCore.Builder;
@@ -12,6 +13,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
+using Services.AutomapperProfiles;
+using Services.Services.DatabaseParser;
+using Services.Services.Facebook;
 
 namespace WebApi
 {
@@ -29,6 +33,7 @@ namespace WebApi
             services.AddDbContext<EfDbContext>(options => options
                     .UseSqlServer(Configuration.GetConnectionString("localhostTeam")));
 
+            AddAutoMapper(services);
             AddDependencies(services);
             services.AddControllers();
             services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()));
@@ -98,13 +103,25 @@ namespace WebApi
 
         private void AddServices(IServiceCollection services)
         {
-       
+            services.AddScoped<IDatabaseSeederService, DatabaseSeederService>();
+            services.AddScoped<IFacebookService, FacebookService>();
         }
 
         private void AddRepositories(IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-           
+            services.AddScoped<IFacebookPostRepository, FacebookPostRepository>();
+        }
+
+        private static void AddAutoMapper(IServiceCollection services)
+        {
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new FacebookProfiles());
+            });
+
+            var mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
         }
     }
 }
