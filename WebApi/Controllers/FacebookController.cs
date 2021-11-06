@@ -25,5 +25,13 @@ namespace WebApi.Controllers
             var result = await _facebookService.GetPostsAsync(skip, take);
             return Ok(result);
         }
+
+        [HttpPost("posts")]
+        public async Task<bool> PostData([FromBody] List<FacebookPostAddDto> postData)
+        {
+            var result = await _facebookService.AddPostAsync(postData);
+            return result;
+        }
+
     }
 }

@@ -20,7 +20,7 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("seed/facebook")]
-        public async Task<ActionResult<string>> HelloWorld()
+        public async Task<ActionResult<string>> FacebookDataSeed()
         {
             await _seeder.GetContentAsync(typeof(FacebookPost), "HOOTSUITE_FACEBOOKPAGE.tsv");
             return Ok();
