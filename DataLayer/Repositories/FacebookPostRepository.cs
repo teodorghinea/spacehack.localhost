@@ -24,7 +24,7 @@ namespace DataLayer.Repositories
 
         public async Task<List<FacebookPost>> GetAllSpecifyListSizeAsync(int skip = 0, int take = 0)
         {
-            var result = GetRecords(true).Skip(skip);
+            var result = GetRecords(true).OrderByDescending(p => p.Date).Skip(skip);
             if (take != 0) result = result.Take(take);
 
             return await result.ToListAsync();

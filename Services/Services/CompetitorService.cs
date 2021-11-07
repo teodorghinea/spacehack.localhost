@@ -5,12 +5,14 @@ using DataLayer.Repositories;
 using Services.Dtos;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Services.Services
 {
     public interface ICompetitorService
     {
+        Task<CompetitorDto> GetMyAccount();
         Task<List<CompetitorDto>> GetAllCompetitorsAsync();
         Task<bool> AddNewCompetitorAsync(CompetitorDto newCompetitor);
         Task<CompetitorDto> GetCompetitorByIdAsync(Guid competitorId);
@@ -26,6 +28,12 @@ namespace Services.Services
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+        }
+
+        public async Task<CompetitorDto> GetMyAccount()
+        {
+            var allCompetitors = await GetAllCompetitorsAsync();
+            return allCompetitors.FirstOrDefault(c => c.Name == "Hootsuite");
         }
 
         public async Task<List<CompetitorDto>> GetAllCompetitorsAsync()

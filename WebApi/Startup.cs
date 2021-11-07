@@ -17,6 +17,7 @@ using Services.AutomapperProfiles;
 using Services.Services;
 using Services.Services.DatabaseParser;
 using Services.Services.Facebook;
+using Services.Services.MonkeyLearnService;
 
 namespace WebApi
 {
@@ -106,7 +107,9 @@ namespace WebApi
         {
             services.AddScoped<IDatabaseSeederService, DatabaseSeederService>();
             services.AddScoped<IFacebookService, FacebookService>();
+            services.AddScoped<IDataAnalysisService, DataAnalysisService>();
             services.AddScoped<ICompetitorService, CompetitorService>();
+            services.AddScoped<IRequestService, RequestService>();
         }
 
         private void AddRepositories(IServiceCollection services)

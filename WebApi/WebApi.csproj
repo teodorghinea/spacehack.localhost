@@ -14,16 +14,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="hootsuiteDb\HOOTSUITE_FACEBOOKPAGE.tsv">
+    <None Update="hootsuiteDb\HOOTSUITE_FACEBOOKPAGE.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="hootsuiteDb\HOOTSUITE_FACEBOOKPAGE.csv">
+    <None Update="hootsuiteDb\HOOTSUITE_FACEBOOKPAGE.tsv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="hootsuiteDb\HOOTSUITE_INSTAGRAM.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="hootsuiteDb\HOOTSUITE_LINKEDINC.csv">
+    <None Update="hootsuiteDb\HOOTSUITE_LINKEDIN.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="hootsuiteDb\HOOTSUITE_TWITTER.csv">

@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using DataLayer;
 using DataLayer.Entities;
 using DataLayer.Repositories;
 using Services.Dtos;
 using Services.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Services.Services.Facebook
@@ -12,7 +15,8 @@ namespace Services.Services.Facebook
 
     public interface IFacebookService
     {
-        Task<List<FacebookPostDto>> GetPostsAsync(int skip = 0, int take = 0);
+        Task<FacebookPostDto> GetByIdAsync(Guid postId);
+        Task<List<LightFacebookPostDto>> GetPostsAsync(int skip = 0, int take = 0);
         Task<bool> AddPostAsync(List<FacebookPostAddDto> request);
     }
 
@@ -27,11 +31,20 @@ namespace Services.Services.Facebook
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<List<FacebookPostDto>> GetPostsAsync(int skip = 0, int take = 0)
+        public async Task<FacebookPostDto> GetByIdAsync(Guid postId)
+        {
+            var facebookPost = await _unitOfWork.FacebookPosts.GetByIdAsync(postId);
+            if (facebookPost == null) throw new BadRequestException("Post not found");
+
+            Thread.Sleep(200);
+
+            return _mapper.Map<FacebookPostDto>(facebookPost);
+        }
+
+        public async Task<List<LightFacebookPostDto>> GetPostsAsync(int skip = 0, int take = 0)
         {
             var facebookPosts = await _unitOfWork.FacebookPosts.GetAllSpecifyListSizeAsync(skip, take);
-            facebookPosts = facebookPosts.OrderBy(p => p.Date).ToList();
-            return _mapper.Map<List<FacebookPostDto>>(facebookPosts);
+            return _mapper.Map<List<LightFacebookPostDto>>(facebookPosts);
         }
 
         public async Task<bool> AddPostAsync(List<FacebookPostAddDto> request)

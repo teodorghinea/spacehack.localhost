@@ -15,6 +15,7 @@ namespace DataLayer.Entities
         public int Likes { get; set; }
         public int Shares { get; set; }
         public int Reactions { get; set; }
+        public string KeyWords { get; set; }
         public Guid? CompetitorId { get; set; }
         public virtual Competitor Competitor { get; set; }
     }

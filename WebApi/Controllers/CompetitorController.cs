@@ -20,6 +20,12 @@ namespace WebApi.Controllers
             _competitorsService = competitorService;
         }
 
+        [HttpGet("my-page")]
+        public async Task<ActionResult<CompetitorDto>> GetMyAccount()
+        {
+            var result = await _competitorsService.GetMyAccount();
+            return Ok(result);
+        }
 
         [HttpGet("by-id/{id}")]
         public async Task<ActionResult<CompetitorDto>> GetCompetitorById([FromRoute] Guid id)

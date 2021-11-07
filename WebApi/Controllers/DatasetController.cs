@@ -8,7 +8,7 @@ namespace WebApi.Controllers
 {
 
     [ApiController]
-    [Route("api/database-seeder")]
+    [Route("api/do-not-touch-this/database-seeder")]
     public class DatasetController : WebApiController
     {
         private readonly IDatabaseSeederService _seeder;
@@ -24,6 +24,14 @@ namespace WebApi.Controllers
         {
             await _seeder.GetContentAsync(typeof(FacebookPost), "HOOTSUITE_FACEBOOKPAGE.tsv");
             return Ok();
+        }
+
+        [HttpGet]
+        [Route("seed/facebook/key-words")]
+        public async Task<ActionResult<bool>> FacebookDataKeywordSeed()
+        {
+            var result = await _seeder.Facebook_KeywordseedAsync();
+            return Ok(result);
         }
 
     }

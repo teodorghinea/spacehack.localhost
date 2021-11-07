@@ -19,6 +19,8 @@ namespace Services.AutomapperProfiles
                 .ForMember(dest => dest.Url, opt => opt.MapFrom(src => src.Url.Trim()))
                 .ReverseMap();
 
+            CreateMap<FacebookPost, LightFacebookPostDto>().ReverseMap();
+
             CreateMap<FacebookPostAddDto, FacebookPost>()
                 .ForMember(dest => dest.Date, opt => opt.Ignore())
                 .ForMember(dest => dest.MediaFile, opt => opt.MapFrom(src => src.MediaFile.Trim()))
