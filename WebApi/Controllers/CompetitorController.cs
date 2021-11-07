@@ -20,10 +20,18 @@ namespace WebApi.Controllers
             _competitorsService = competitorService;
         }
 
+        /* my account */
         [HttpGet("my-page")]
         public async Task<ActionResult<CompetitorDto>> GetMyAccount()
         {
-            var result = await _competitorsService.GetMyAccount();
+            var result = await _competitorsService.GetMyAccountAsync();
+            return Ok(result);
+        }
+
+        [HttpGet("my-status")]
+        public async Task<ActionResult<Dictionary<string, StatusCounter>>> GetMyStatus()
+        {
+            var result = await _competitorsService.GetYearlyStatusAsync();
             return Ok(result);
         }
 

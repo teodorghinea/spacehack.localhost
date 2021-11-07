@@ -20,7 +20,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost("analyze")]
-        public async Task<ActionResult<List<string>>> ImportData([FromBody] PostForMetricsDto request)
+        public async Task<ActionResult<MatchingMetricsDto>> ImportData([FromBody] PostForMetricsDto request)
         {
             var result = await _dataAnalysisService.ImportPostInformationAsync(request);
             return Ok(result);

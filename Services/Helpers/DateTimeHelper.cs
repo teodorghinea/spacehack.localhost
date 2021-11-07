@@ -1,4 +1,6 @@
-﻿using System;
+﻿using DataLayer;
+using System;
+using System.Globalization;
 
 namespace Services.Helpers
 {
@@ -8,6 +10,12 @@ namespace Services.Helpers
         public static DateTime GetUtcFromEpoch(int epochTime)
         {
             return DateTimeOffset.FromUnixTimeSeconds(epochTime).UtcDateTime;
+        }
+
+        public static int GetWeekNumber(DateTime time)
+        {
+            return CultureInfo.CurrentCulture.Calendar
+                .GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         }
 
         /* for dummy data request */
