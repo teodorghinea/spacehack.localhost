@@ -41,6 +41,7 @@ namespace Services.Services.Facebook
             return _mapper.Map<FacebookPostDto>(facebookPost);
         }
 
+        /* my account */
         public async Task<List<LightFacebookPostDto>> GetPostsAsync(int skip = 0, int take = 0)
         {
             var facebookPosts = await _unitOfWork.FacebookPosts.GetAllSpecifyListSizeAsync(skip, take);

@@ -19,12 +19,14 @@ namespace Services.Services
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRequestService _requestService;
+        private readonly bool _hardcoreMatching;
 
         public DataAnalysisService(IRequestService requestService, IUnitOfWork unitOfWork, IMapper mapper)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
             _requestService = requestService;
+            _hardcoreMatching = false;
         }
 
         public async Task<MatchingMetricsDto> ImportPostInformationAsync(PostForMetricsDto request)
@@ -37,7 +39,9 @@ namespace Services.Services
             {
                 return new MatchingMetricsDto();
             }
-            return await GetPostMetricsAsync(keys);
+            var dto = await GetPostMetricsAsync(keys);
+            dto.PostKeywords = keys;
+            return dto;
         }
 
 
@@ -50,10 +54,9 @@ namespace Services.Services
             var result = new MatchingMetricsDto
             {
                 Competitors = GetCompetitorMatchingPosts(keywords, matchedCompetitors),
-                Score = GetPostsScore(ownAccount.FacebookPosts),
             };
             result.OwnMatchingPostCount = result.Competitors.FirstOrDefault(c => c.Competitor.Id == ownAccount.Id)?.MatchingPostsCount ?? 0;
-
+            result.Score = result.Competitors.Sum(c => c.CompetitorScore);
             return result;
         }
 
@@ -66,7 +69,9 @@ namespace Services.Services
                 {
                     foreach (var word in contentKey.Split(" "))
                     {
-                        if (competitor.KeyWords.ToLower().Contains(word.ToLower()))
+                        if (_hardcoreMatching ? 
+                            competitor.KeyWords.ToLower().Contains(contentKey) :
+                            competitor.KeyWords.ToLower().Contains(word.ToLower()))
                         {
                             if (!matchedCompetitors.Any(c => c.Id == competitor.Id))
                             {
@@ -93,12 +98,14 @@ namespace Services.Services
                         {
                             if (post.KeyWords != null)
                             {
-                                if (post.KeyWords.ToLower().Contains(word.ToLower()))
+                                if (_hardcoreMatching ?
+                                    post.KeyWords.ToLower().Contains(contentKey) :
+                                    post.KeyWords.ToLower().Contains(word.ToLower()))
                                 {
                                     if (!competitorsWithPostsDto.Any(c => c.Competitor.Id == competitor.Id))
-                                    {
-                                        var competitorDto = GetCompetitorMetric(competitor);
-                                        competitorDto.Posts.Add(_mapper.Map<FacebookPostDto>(post));
+                                    { 
+                                        var competitorDto = _mapper.Map<CompetitorWithPosts>(competitor);
+                                        competitorDto.Posts.Add(GetArticleWithScore(post));
                                         competitorsWithPostsDto.Add(competitorDto);
                                     }
                                     else
@@ -106,7 +113,7 @@ namespace Services.Services
                                         var competitorDto = competitorsWithPostsDto.First(c => c.Competitor.Id == competitor.Id);
                                         if(!competitorDto.Posts.Any(p => p.Id == post.Id))
                                         {
-                                            competitorDto.Posts.Add(_mapper.Map<FacebookPostDto>(post));
+                                            competitorDto.Posts.Add(GetArticleWithScore(post));
                                         }
                                     }
                                 }
@@ -117,37 +124,27 @@ namespace Services.Services
             }
             foreach (var competitor in competitorsWithPostsDto)
             {
-                competitor.CompetitorScore = GetPostsScore(competitor.Posts);
                 competitor.MatchingPostsCount = competitor.Posts.Count();
+                competitor.ArticlesKeywords = competitor.Posts.SelectMany(p => p.KeyWords.Split(",")).ToList();
+                competitor.CompetitorScore = competitor.Posts.Sum(p => p.Score) / competitor.Posts.Count;
+                competitor.Posts = competitor.Posts.OrderByDescending(p => p.Score).ToList();
             }
-            return competitorsWithPostsDto;
+            return competitorsWithPostsDto.OrderByDescending(c => c.CompetitorScore).ToList();
         }
 
-        private CompetitorWithPosts GetCompetitorMetric(Competitor competitor)
+        private MetricsFacebookPost GetArticleWithScore(FacebookPost article)
         {
+            var totalReactions = article.Likes + article.Comments + article.Reactions + article.Shares;
 
-            return new CompetitorWithPosts
-            {
-                Competitor = _mapper.Map<CompetitorDto>(competitor),
-            };
-        }
+            var dto = _mapper.Map<MetricsFacebookPost>(article);
 
-        private int GetPostsScore(List<FacebookPost> posts)
-        {
-            var likes = posts.Sum(p => p.Likes);
-            var shares = posts.Sum(p => p.Shares);
-            var comments = posts.Sum(p => p.Comments);
-            var reactions = posts.Sum(p => p.Reactions);
+            dto.Score = totalReactions != 0 ? 
+                article.Comments  * 0.15m / totalReactions +
+                article.Likes     * 0.05m / totalReactions +
+                article.Reactions * 0.1m  / totalReactions +
+                article.Shares    * 0.2m  / totalReactions : 0;
 
-            return likes     * 1 +
-                   comments  * 1 +
-                   reactions * 1 +
-                   shares    * 1; 
-        }
-
-        private int GetPostsScore(List<FacebookPostDto> posts)
-        {
-            return GetPostsScore(_mapper.Map<List<FacebookPost>>(posts));
+            return dto;
         }
 
         public List<string> GetKeyWords(string input)

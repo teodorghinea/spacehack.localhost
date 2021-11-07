@@ -20,5 +20,6 @@ namespace Services.Dtos
         public string FeaturedVideo { get; set; }
         public string GeneralInfo { get; set; }
         public string Mission { get; set; }
+        public string KeyWords { get; set; }
     }
 }

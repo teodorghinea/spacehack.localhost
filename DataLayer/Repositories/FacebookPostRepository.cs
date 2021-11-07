@@ -27,7 +27,7 @@ namespace DataLayer.Repositories
             var result = GetRecords(true).OrderByDescending(p => p.Date).Skip(skip);
             if (take != 0) result = result.Take(take);
 
-            return await result.ToListAsync();
+            return await result.Where(p => p.Competitor.Name == "Hootsuite").ToListAsync();
         }
     }
 }
